@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Indexed
+{% endblock %}
+
+{% block main %}
+    {% if available %}
+    <p>
+        We have searched for {{name}} and it is <b>available!</b> Buy it on <a href="https://www.cloudflare.com/en-gb/products/registrar/">Cloudflare</a>!
+    </p>
+    {% else %}
+    <p>
+        We have searched for {{name}} and it is <b>not available!</b> It expires on {{expires_at}}
+    </p>
+    {% endif %}
+{% endblock %}
