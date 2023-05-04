@@ -25,35 +25,38 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# TODO: Create database if it doesn't exist and switch all queries to sqlite3
+# Create database if it doesn't exist
 
-"""
 conn = sqlite3.connect('domain.db')
-CREATE TABLE "domains" (
-	"name"	TEXT NOT NULL,
-	"category"	INTEGER NOT NULL,
-	"available"	BOOLEAN,
-	"expires_at"	DATETIME,
-	"checked_at"	DATETIME,
-	"registry_statuses"	TEXT,
-	PRIMARY KEY("name")
-)
-CREATE TABLE 'history' (
-    'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-    'user_id' INTEGER NOT NULL, 
-    'domain_name' TEXT NOT NULL, 
-    'available' BOOLEAN NOT NULL, 
-    'expires_at' DATETIME, 
-    'checked_at' DATETIME NOT NULL
-)
+db = conn.cursor()
 
-CREATE TABLE 'users' (
-	"id"	INTEGER NOT NULL,
-	"username"	TEXT NOT NULL,
-	"hash"	TEXT NOT NULL, 'isAdmin' TEXT NOT NULL DEFAULT 'no',
-	PRIMARY KEY("id" AUTOINCREMENT)
-)
-"""
+db.execute('''
+            CREATE TABLE IF NOT EXISTS domains (
+	            [name] TEXT NOT NULL PRIMARY KEY,
+	            [category]	INTEGER NOT NULL,
+	            [available]	BOOLEAN,
+	            [expires_at]	DATETIME,
+	            [checked_at]	DATETIME,
+	            [registry_statuses]	TEXT)
+            ''')
+db.execute('''
+            CREATE TABLE IF NOT EXISTS history (
+                [id] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+                [user_id] INTEGER NOT NULL, 
+                [domain_name] TEXT NOT NULL, 
+                [available] BOOLEAN NOT NULL, 
+                [expires_at] DATETIME, 
+                [checked_at] DATETIME NOT NULL)
+            ''')
+
+db.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+	            [id]	INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+	            [username]	TEXT NOT NULL,
+	            [hash]	TEXT NOT NULL, 'isAdmin' TEXT NOT NULL DEFAULT 'no')
+            ''')
+
+conn.commit()
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///domain.db")

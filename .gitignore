@@ -3,4 +3,4 @@
 
 # Databases
 *.db
-*.db-journal
+*.db*
